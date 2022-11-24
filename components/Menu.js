@@ -2,29 +2,60 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
-  BellIcon,
-  CogIcon,
-  UserIcon,
+  Cog6ToothIcon,
+  FolderIcon,
+  HomeIcon,
+  PaperClipIcon,
+  UsersIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const user = {
   name: "Tom Cook",
   email: "tom@institutobuenviaje.edu.ar",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+  rol: "alumno",
+  id: "12345678",
 };
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
+  {
+    name: "Inicio",
+    href: "/",
+    current: true,
+    icon: <HomeIcon className="w-4 h-4 mr-2 inline-flex align-middle mb-1" />,
+  },
+  {
+    name: "Usuarios",
+    href: "/usuarios",
+    current: false,
+    icon: <UsersIcon className="w-4 h-4 mr-2 inline-flex align-middle mb-1" />,
+  },
+  {
+    name: "Carreras",
+    href: "/carreras",
+    current: false,
+    icon: <FolderIcon className="w-4 h-4 mr-2 inline-flex align-middle mb-1" />,
+  },
+  {
+    name: "Materias",
+    href: "/materias",
+    current: false,
+    icon: <FolderIcon className="w-4 h-4 mr-2 inline-flex align-middle mb-1" />,
+  },
+  {
+    name: "Documentación",
+    href: "/documentacion",
+    current: false,
+    icon: (
+      <PaperClipIcon className="w-4 h-4 mr-2 inline-flex align-middle mb-1" />
+    ),
+  },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Perfil", href: "/perfil" },
+  { name: "Configuración", href: "/configuracion" },
+  { name: "Cerrar sesión", href: "/login" },
 ];
 
 function classNames(...classes) {
@@ -32,16 +63,23 @@ function classNames(...classes) {
 }
 
 export default function MainMenu() {
+  const router = useRouter();
+  const route = router.asPath;
+
+  navigation.map((r) =>
+    r.href == route ? (r.current = true) : (r.current = false)
+  );
+
   return (
     <>
-      <div>
+      <div className="h-full flex">
         <Disclosure
           as="nav"
-          className="bg-gray-800 lg:min-h-screen w-full lg:w-60"
+          className="bg-gray-800 lg:min-h-screen h-full w-full lg:w-60"
         >
           {({ open }) => (
             <>
-              <div className="w-auto px-6 py-4 sm:py-6 lg:py-8 h-full">
+              <div className="w-auto px-6 py-4 sm:py-6 lg:py-8">
                 <div className="flex flex-col h-full">
                   <div className="flex flex-row lg:flex-col items-center lg:space-y-6">
                     <div className="flex-shrink-0">
@@ -84,8 +122,11 @@ export default function MainMenu() {
                             type="button"
                             className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                           >
-                            <span className="sr-only">View notifications</span>
-                            <CogIcon className="h-6 w-6" aria-hidden="true" />
+                            <span className="sr-only">Ver menu de usuario</span>
+                            <Cog6ToothIcon
+                              className="h-6 w-6"
+                              aria-hidden="true"
+                            />
                             <Transition
                               as={Fragment}
                               enter="transition ease-out duration-100"
@@ -121,7 +162,7 @@ export default function MainMenu() {
                     <div className="hidden lg:block w-full">
                       <div className="flex flex-col space-y-2 w-full">
                         {navigation.map((item) => (
-                          <a
+                          <Link
                             key={item.name}
                             href={item.href}
                             className={classNames(
@@ -132,8 +173,9 @@ export default function MainMenu() {
                             )}
                             aria-current={item.current ? "page" : undefined}
                           >
+                            {item.icon}
                             {item.name}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -146,7 +188,7 @@ export default function MainMenu() {
                   {navigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
-                      as="a"
+                      as={Link}
                       href={item.href}
                       className={classNames(
                         item.current
@@ -156,6 +198,7 @@ export default function MainMenu() {
                       )}
                       aria-current={item.current ? "page" : undefined}
                     >
+                      {item.icon}
                       {item.name}
                     </Disclosure.Button>
                   ))}
@@ -175,7 +218,7 @@ export default function MainMenu() {
                     {userNavigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}
-                        as="a"
+                        as={Link}
                         href={item.href}
                         className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                       >
